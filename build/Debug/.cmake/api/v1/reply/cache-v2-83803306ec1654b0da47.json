@@ -1183,10 +1183,10 @@
 			[
 				{
 					"name" : "HELPSTRING",
-					"value" : "The CMake toolchain file"
+					"value" : "No help, variable specified on the command line."
 				}
 			],
-			"type" : "FILEPATH",
+			"type" : "UNINITIALIZED",
 			"value" : "/Users/daliss/project/Embedded/stm32/STM32learning/self-balancing-vehicle/cmake/gcc-arm-none-eabi.cmake"
 		},
 		{

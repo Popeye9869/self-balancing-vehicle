@@ -60,14 +60,14 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "STM32_Drivers::@768a070a0fe75716b479",
-					"jsonFile" : "target-STM32_Drivers-Debug-2ed23300dc49dada99a3.json",
+					"jsonFile" : "target-STM32_Drivers-Debug-f804e9cb8c7ff9700a92.json",
 					"name" : "STM32_Drivers",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "self-balancing-vehicle::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-self-balancing-vehicle-Debug-c6bb534022852f2aa405.json",
+					"jsonFile" : "target-self-balancing-vehicle-Debug-fbb76feede82c68e4f70.json",
 					"name" : "self-balancing-vehicle",
 					"projectIndex" : 0
 				}

@@ -20,6 +20,8 @@
 #include "main.h"
 #include "i2c.h"
 #include "gpio.h"
+#include "stm32f103xb.h"
+#include "stm32f1xx_hal_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -96,6 +98,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // Toggle the LED on PC13
+    HAL_Delay(500); // Delay for 500 ms
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
