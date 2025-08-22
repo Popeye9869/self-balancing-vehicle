@@ -43,13 +43,23 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 )
 
 # Add sources to executable
+
+aux_source_directory(Drv DRV_SOURCES)
+aux_source_directory(Drv/MPU6050 DRV_SOURCES)
+aux_source_directory(Drv/MPU6050/eMPL DRV_SOURCES)
+aux_source_directory(Drv/SSD1306_OLED DRV_SOURCES)
+
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    ${DRV_SOURCES}
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    Drv/MPU6050
+    Drv/MPU6050/eMPL
+    Drv/SSD1306_OLED
 )
 
 # Add project symbols (macros)
