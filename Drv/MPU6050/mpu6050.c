@@ -1,8 +1,4 @@
 #include "mpu6050.h"
-#include "delay.h"
-#include "usart.h"
-#include "i2c.h"
-#include "Print.h"
 /**
  * @brief 初始化MPU6050
  * @param 无

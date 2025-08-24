@@ -18,14 +18,15 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "font.h"
 #include "i2c.h"
 #include "gpio.h"
-#include "stm32f103xb.h"
-#include "stm32f1xx_hal_gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "inv_mpu.h"
+#include "oled.h"
+#include "mpu6050.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,7 +47,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+float pitch, roll, yaw;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -91,6 +92,39 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+  OLED_Init();
+
+  //初始化MPU6050
+  if(MPU_Init())
+  {
+    OLED_NewFrame();
+    OLED_PrintString(0, 0, "MPU6050 Error!", &font16x16, OLED_COLOR_NORMAL);
+    OLED_ShowFrame();
+    while (1)
+      ;
+  }
+  else
+  {
+    OLED_NewFrame();
+    OLED_PrintString(0, 0, "MPU6050 OK!", &font16x16, OLED_COLOR_NORMAL);
+    OLED_ShowFrame();
+  }
+
+  //初始化DMP
+  if (mpu_dmp_init())
+  {
+    OLED_NewFrame();
+    OLED_PrintString(0, 0, "DMP Error!", &font16x16, OLED_COLOR_NORMAL);
+    OLED_ShowFrame();
+    while (1)
+      ;
+  }
+  else
+  {
+    OLED_NewFrame();
+    OLED_PrintString(0, 0, "DMP OK!", &font16x16, OLED_COLOR_NORMAL);
+    OLED_ShowFrame();
+  }
 
   /* USER CODE END 2 */
 
@@ -99,10 +133,10 @@ int main(void)
   while (1)
   {
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // Toggle the LED on PC13
-    HAL_Delay(500); // Delay for 500 ms
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    mpu_dmp_get_data(&pitch, &roll, &yaw);
   }
   /* USER CODE END 3 */
 }

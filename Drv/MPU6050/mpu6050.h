@@ -33,11 +33,11 @@
 #define MPU6050_Software_I2C
 
 #ifdef MPU6050_Software_I2C
-#define I2C_Group_SCL GPIOA // I2C的时钟GPIO组号
-#define I2C_SCL GPIO_PIN_0  // I2C时钟的GPIO端口号
+#define I2C_Group_SCL GPIOB // I2C的时钟GPIO组号
+#define I2C_SCL GPIO_PIN_4  // I2C时钟的GPIO端口号
 
-#define I2C_Group_SDA GPIOA // I2C的数据GPIO组号
-#define I2C_SDA GPIO_PIN_1  // I2C数据的GPIO端口号
+#define I2C_Group_SDA GPIOB // I2C的数据GPIO组号
+#define I2C_SDA GPIO_PIN_3  // I2C数据的GPIO端口号
 
 #define I2C_Write_SCL(x) HAL_GPIO_WritePin(I2C_Group_SCL, I2C_SCL, x)
 #define I2C_Write_SDA(x) HAL_GPIO_WritePin(I2C_Group_SDA, I2C_SDA, x)

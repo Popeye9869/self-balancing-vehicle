@@ -23,8 +23,6 @@
 #include "inv_mpu_dmp_motion_driver.h"
 #include "dmpKey.h"
 #include "dmpmap.h"
-#include "usart.h"
-#include "delay.h"
 
 //定义目标板采用MSP430
 #define  MOTION_DRIVER_TARGET_MSP430

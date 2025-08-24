@@ -48,10 +48,13 @@ aux_source_directory(Drv DRV_SOURCES)
 aux_source_directory(Drv/MPU6050 DRV_SOURCES)
 aux_source_directory(Drv/MPU6050/eMPL DRV_SOURCES)
 aux_source_directory(Drv/SSD1306_OLED DRV_SOURCES)
+aux_source_directory(App/Src APP_SOURCES)
+aux_source_directory(App/Inc APP_SOURCES)
 
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     ${DRV_SOURCES}
+    ${APP_SOURCES}
 )
 
 # Add include paths
@@ -60,6 +63,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     Drv/MPU6050
     Drv/MPU6050/eMPL
     Drv/SSD1306_OLED
+    App/Inc
 )
 
 # Add project symbols (macros)
@@ -76,3 +80,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
     # Add user defined libraries
 )
+
+#添加-f的支持
+target_link_options(${PROJECT_NAME} PRIVATE -u _printf_float)

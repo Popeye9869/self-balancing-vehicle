@@ -1,7 +1,7 @@
 #ifndef __MPUIIC_H
 #define __MPUIIC_H
 #include "main.h"
-#include "mpu6050.h"
+//#include "mpu6050.h"
 
 // IIC所有操作函数
 void I2C_Delay(void);              // MPU IIC延时函数

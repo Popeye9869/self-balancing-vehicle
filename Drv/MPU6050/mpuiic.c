@@ -1,5 +1,5 @@
 #include "mpuiic.h"
-#include "delay.h"
+#include "mpu6050.h"
 #if defined(MPU6050_Software_I2C)
 /**
  * @brief 一段延迟
@@ -10,7 +10,7 @@
  */
 void I2C_Delay()
 {
-	int z = 0xff;
+	int z = 0x01;
 	while (z--)
 		;
 }
