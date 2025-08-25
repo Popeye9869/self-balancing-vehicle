@@ -18,8 +18,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "font.h"
 #include "i2c.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -27,6 +27,8 @@
 #include "inv_mpu.h"
 #include "oled.h"
 #include "mpu6050.h"
+#include "moto.h"
+#include <sys/_intsup.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,6 +93,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
 
@@ -126,6 +129,10 @@ int main(void)
     OLED_ShowFrame();
   }
 
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+  MotoControl(3000, -3000);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -137,6 +144,15 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     mpu_dmp_get_data(&pitch, &roll, &yaw);
+    // OLED_NewFrame();
+    // char buf[20];
+    // snprintf(buf, sizeof(buf), "P:%.2f", pitch);
+    // OLED_PrintString(0, 0, buf, &font16x16, OLED_COLOR_NORMAL);
+    // snprintf(buf, sizeof(buf), "R:%.2f", roll);
+    // OLED_PrintString(0, 16, buf, &font16x16, OLED_COLOR_NORMAL);
+    // snprintf(buf, sizeof(buf), "Y:%.2f", yaw);
+    // OLED_PrintString(0, 32, buf, &font16x16, OLED_COLOR_NORMAL);
+    // OLED_ShowFrame();
   }
   /* USER CODE END 3 */
 }

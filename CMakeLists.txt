@@ -48,6 +48,7 @@ aux_source_directory(Drv DRV_SOURCES)
 aux_source_directory(Drv/MPU6050 DRV_SOURCES)
 aux_source_directory(Drv/MPU6050/eMPL DRV_SOURCES)
 aux_source_directory(Drv/SSD1306_OLED DRV_SOURCES)
+aux_source_directory(Drv/moto DRV_SOURCES)
 aux_source_directory(App/Src APP_SOURCES)
 aux_source_directory(App/Inc APP_SOURCES)
 
@@ -63,6 +64,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     Drv/MPU6050
     Drv/MPU6050/eMPL
     Drv/SSD1306_OLED
+    Drv/moto
     App/Inc
 )
 
