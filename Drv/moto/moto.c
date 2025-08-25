@@ -1,5 +1,4 @@
 #include "moto.h"
-#include <stdlib.h>
 
 int abs(int p)
 {
@@ -35,14 +34,15 @@ void MotoControl(int16_t left, int16_t right)
     }
     if (right > 0)
     {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
+        
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
         __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, abs(right));
     }
     else if (right < 0)
     {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
         __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, abs(right));
     }
     else

@@ -28,6 +28,7 @@
 #include "oled.h"
 #include "mpu6050.h"
 #include "moto.h"
+#include "pid.h"
 #include <sys/_intsup.h>
 /* USER CODE END Includes */
 
@@ -50,6 +51,7 @@
 
 /* USER CODE BEGIN PV */
 float pitch, roll, yaw;
+float roll_0 = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -94,8 +96,11 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_TIM1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
+
+  HAL_TIM_Base_Start_IT(&htim2); //启动定时器2中断
 
   //初始化MPU6050
   if(MPU_Init())
@@ -131,7 +136,6 @@ int main(void)
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
-  MotoControl(3000, -3000);
 
   /* USER CODE END 2 */
 
@@ -197,7 +201,14 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_TIM_HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    if (htim->Instance == TIM2) // Check if the interrupt is from TIM2
+    {
+        // Call your PID control function here
+        PID_StandUpControl(roll_0); // Assuming you want to control based on pitch
+    }
+}
 /* USER CODE END 4 */
 
 /**

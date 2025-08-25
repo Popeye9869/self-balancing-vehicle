@@ -73,7 +73,8 @@ void Error_Handler(void);
 #define SCL_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
+extern float pitch, roll, yaw;
+extern float roll_0;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
