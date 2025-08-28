@@ -29,6 +29,7 @@
 #include "mpu6050.h"
 #include "moto.h"
 #include "pid.h"
+#include <stdio.h>
 #include <sys/_intsup.h>
 /* USER CODE END Includes */
 
@@ -50,8 +51,17 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
+enum my_state vehicle_state = unintialized;
+
+int flag = 0;
+
 float pitch, roll, yaw;
-float roll_0 = 0;
+
+float roll_0 = -4.8; //初始角度
+
+short gx, gy, gz; //陀螺仪原始数据
+short ax, ay, az; //加速度原始数据
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -97,11 +107,15 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
 
-  HAL_TIM_Base_Start_IT(&htim2); //启动定时器2中断
+  HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL); //启动编码器接口
+  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); //启动编码器接口
 
+  
   //初始化MPU6050
   if(MPU_Init())
   {
@@ -137,6 +151,10 @@ int main(void)
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 
+  vehicle_state = running;
+
+  HAL_TIM_Base_Start_IT(&htim3); //启动定时器3中断
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -147,6 +165,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    MPU_Get_Gyroscope(&gx,  &gy, &gz);
+    MPU_Get_Accelerometer(&ax, &ay, &az);
     mpu_dmp_get_data(&pitch, &roll, &yaw);
     // OLED_NewFrame();
     // char buf[20];
@@ -157,6 +177,37 @@ int main(void)
     // snprintf(buf, sizeof(buf), "Y:%.2f", yaw);
     // OLED_PrintString(0, 32, buf, &font16x16, OLED_COLOR_NORMAL);
     // OLED_ShowFrame();
+
+
+    // OLED_NewFrame();
+    // char buf[20];
+    // sprintf(buf, "tim2:%d", ReadVel(&htim2));
+    // OLED_PrintString(0, 0, buf, &font16x16, OLED_COLOR_NORMAL);
+    // sprintf(buf, "tim4:%d", ReadVel(&htim4));
+    // OLED_PrintString(0, 16, buf, &font16x16, OLED_COLOR_NORMAL);
+    // OLED_ShowFrame();
+    // HAL_Delay(1000);
+
+    // OLED_NewFrame();
+    // char buf[20];
+    // sprintf(buf, "ax:%d", ax);
+    // OLED_PrintString(0, 0, buf, &font16x16, OLED_COLOR_NORMAL);
+    // sprintf(buf, "ay:%d", ay);
+    // OLED_PrintString(0, 16, buf, &font16x16, OLED_COLOR_NORMAL);
+    // sprintf(buf, "az:%d", az);
+    // OLED_PrintString(0, 32, buf, &font16x16, OLED_COLOR_NORMAL);
+    // OLED_ShowFrame();
+
+    // OLED_NewFrame();
+    // char buf[20];
+    // sprintf(buf, "gx:%d", gx);
+    // OLED_PrintString(0, 0, buf, &font16x16, OLED_COLOR_NORMAL);
+    // sprintf(buf, "gy:%d", gy);
+    // OLED_PrintString(0, 16, buf, &font16x16, OLED_COLOR_NORMAL);
+    // sprintf(buf, "gz:%d", gz);
+    // OLED_PrintString(0, 32, buf, &font16x16, OLED_COLOR_NORMAL);
+    // OLED_ShowFrame();
+
   }
   /* USER CODE END 3 */
 }
@@ -201,12 +252,26 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_TIM_HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+__used void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    if (htim->Instance == TIM2) // Check if the interrupt is from TIM2
+    if (htim->Instance == TIM3 && vehicle_state == running) // Check if the interrupt is from TIM2
     {
         // Call your PID control function here
-        PID_StandUpControl(roll_0); // Assuming you want to control based on pitch
+        //PID_StandUpControl(0);
+        PID_VelControl(0);
+    }
+    if (htim->Instance == TIM3 && vehicle_state == stop) // Check if the interrupt is from TIM2
+    {
+      if((roll - roll_0) > -1 && (roll - roll_0) < 1)
+        flag++;
+      if (flag > 50) {
+        vehicle_state = running;
+        flag = 0;
+      
+      }
+    }
+    else {
+      MotoControl(0, 0);
     }
 }
 /* USER CODE END 4 */

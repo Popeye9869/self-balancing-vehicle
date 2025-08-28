@@ -73,8 +73,20 @@ void Error_Handler(void);
 #define SCL_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
+
+extern enum my_state {
+  unintialized, 
+  stop, 
+  running
+}vehicle_state;
+
 extern float pitch, roll, yaw;
 extern float roll_0;
+extern short gx, gy, gz; //陀螺仪原始数据
+extern short ax, ay, az; //加速度原始数据
+
+
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

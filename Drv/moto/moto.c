@@ -1,10 +1,11 @@
 #include "moto.h"
+#include "stm32f1xx.h"
 
 int abs(int p)
 {
     return p > 0 ? p : -p;
 }
-void MotoControl(int16_t left, int16_t right)
+void MotoControl(int left, int right)
 {
     if (left > 7200)
         left = 7200;
@@ -52,3 +53,12 @@ void MotoControl(int16_t left, int16_t right)
         __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
     }
 }
+
+int ReadVel(TIM_HandleTypeDef *htim)
+{
+    int val = __HAL_TIM_GET_COUNTER(htim);
+    __HAL_TIM_SET_COUNTER(htim, 0);
+    return val;
+}
+
+

@@ -4,6 +4,8 @@
 #include "main.h"
 #include "TIM.h"
 
-void MotoControl(int16_t left, int16_t right);
+void MotoControl(int left, int right);
+
+int ReadVel(TIM_HandleTypeDef *htim);
 
 #endif
