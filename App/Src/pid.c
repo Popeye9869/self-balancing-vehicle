@@ -12,14 +12,14 @@ static float deadband = 0.5f;//死区值
 
 float preVel = 0;
 
-float abs(float a) {
+float my_abs(float a) {
     return a > 0 ? a : -a;
 }
 
 float PID_Compute(PID_TypeDef *pid, float setpoint, float measured_value)
 {
     float error = setpoint - measured_value;
-    if(abs(error)<deadband) error=0; //死区
+    if(my_abs(error)<deadband) error=0; //死区
     pid->integral += error;
     if (pid->integral > pid->integral_max)
     {
