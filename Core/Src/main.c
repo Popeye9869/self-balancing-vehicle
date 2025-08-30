@@ -20,7 +20,6 @@
 #include "main.h"
 #include "dma.h"
 #include "i2c.h"
-#include "stm32f1xx_hal_uart.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -67,7 +66,7 @@ float roll_0 = -4.8; //初始角度
 short gx, gy, gz; //陀螺仪原始数据
 short ax, ay, az; //加速度原始数据
 
-uint16_t uart_rx_buffer[9]={0};
+uint16_t uart_rx_buffer[9]={512, 512, 512, 512, 512, 512, 512, 512, 512};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -161,7 +160,8 @@ int main(void)
 
   vehicle_state = running;
 
-  HAL_UART_Receive_DMA(&huart3, (uint8_t*)uart_rx_buffer, 18);
+  HAL_UART_Receive_DMA(&huart3, (uint8_t*)uart_rx_buffer, 18); //开启DMA接收
+
 
   HAL_TIM_Base_Start_IT(&htim3); //启动定时器3中断
 
@@ -218,17 +218,18 @@ int main(void)
     // OLED_PrintString(0, 32, buf, &font16x16, OLED_COLOR_NORMAL);
     // OLED_ShowFrame();
 
-    OLED_NewFrame();
-    char buf[20];
-    sprintf(buf, "uart:%d", uart_rx_buffer[0]);
-    OLED_PrintString(0, 0, buf, &font16x16, OLED_COLOR_NORMAL);
-    sprintf(buf, "uart:%d", uart_rx_buffer[1]);
-    OLED_PrintString(0, 16, buf, &font16x16, OLED_COLOR_NORMAL);
-    sprintf(buf, "uart:%d", uart_rx_buffer[2]);
-    OLED_PrintString(0, 32, buf, &font16x16, OLED_COLOR_NORMAL);
-    sprintf(buf, "uart:%d", uart_rx_buffer[3]);
-    OLED_PrintString(0, 48, buf, &font16x16, OLED_COLOR_NORMAL);
-    OLED_ShowFrame();
+    // OLED_NewFrame();
+    // char buf[20];
+   
+    // sprintf(buf, "uart:%d", uart_rx_buffer[0]);
+    // OLED_PrintString(0, 0, buf, &font16x16, OLED_COLOR_NORMAL);
+    // sprintf(buf, "uart:%d", uart_rx_buffer[1]);
+    // OLED_PrintString(0, 16, buf, &font16x16, OLED_COLOR_NORMAL);
+    // sprintf(buf, "uart:%d", uart_rx_buffer[2]);
+    // OLED_PrintString(0, 32, buf, &font16x16, OLED_COLOR_NORMAL);
+    // sprintf(buf, "uart:%d", uart_rx_buffer[3]);
+    // OLED_PrintString(0, 48, buf, &font16x16, OLED_COLOR_NORMAL);
+    // OLED_ShowFrame();
 
   }
   /* USER CODE END 3 */
@@ -280,8 +281,8 @@ __used void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     {
         // Call your PID control function here
         //PID_StandUpControl(0);
-        PID_VelControl(0);
-        PID_TurnControl(0);
+        PID_VelControl((512-uart_rx_buffer[3])/10);
+        PID_TurnControl((512.0-uart_rx_buffer[0])/512*180);
         MotoRun();
     }
     if (htim->Instance == TIM3 && vehicle_state == stop) // Check if the interrupt is from TIM2

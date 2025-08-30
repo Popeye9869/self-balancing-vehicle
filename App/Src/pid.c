@@ -85,7 +85,7 @@ void PID_VelControl(int16_t targetVel)
     PID_StandUpControl(temp);
 }
 
-void PID_TurnControl(int16_t targetTurn)
+void PID_TurnControl(float targetTurn)
 {
     float temp;
     float error = targetTurn - yaw;

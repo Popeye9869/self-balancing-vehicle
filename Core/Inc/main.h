@@ -85,6 +85,7 @@ extern float roll_0;
 extern short gx, gy, gz; //陀螺仪原始数据
 extern short ax, ay, az; //加速度原始数据
 
+extern uint16_t uart_rx_buffer[9];
 
 
 /* USER CODE END Private defines */
