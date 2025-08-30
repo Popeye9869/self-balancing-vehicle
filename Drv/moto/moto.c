@@ -1,5 +1,10 @@
 #include "moto.h"
+#include "stm32_hal_legacy.h"
 #include "stm32f1xx.h"
+
+int left_vel = 0;
+int right_vel = 0; 
+
 
 int abs(int p)
 {
@@ -61,4 +66,32 @@ int ReadVel(TIM_HandleTypeDef *htim)
     return val;
 }
 
+void MotoSetAdd(int left_add, int right_add)
+{
+    left_vel += left_add;
+    right_vel += right_add;
+    if (left_vel > 7200)
+        left_vel = 7200;
+    if (left_vel < -7200)
+        left_vel = -7200;
+    if (right_vel > 7200)
+        right_vel = 7200;
+    if (right_vel < -7200)
+        right_vel = -7200;
+}
 
+void MotoRun()
+{
+    MotoControl(left_vel, right_vel);
+    left_vel = 0;
+    right_vel = 0;
+}
+
+void MotoStop()
+{
+    left_vel = 0;
+    right_vel = 0;
+    __HAL_TIM_SetCounter(&htim2, 0);
+    __HAL_TIM_SetCounter(&htim4, 0);
+    MotoControl(0, 0);
+}

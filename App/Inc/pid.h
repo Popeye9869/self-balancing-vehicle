@@ -23,4 +23,6 @@ void PID_StandUpControl(float angle);
 
 void PID_VelControl(int16_t vel);
 
+void PID_TurnControl(int16_t targetTurn);
+
 #endif

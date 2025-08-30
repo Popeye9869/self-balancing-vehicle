@@ -259,19 +259,19 @@ __used void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // Call your PID control function here
         //PID_StandUpControl(0);
         PID_VelControl(0);
+        PID_TurnControl(0);
+        MotoRun();
     }
     if (htim->Instance == TIM3 && vehicle_state == stop) // Check if the interrupt is from TIM2
     {
-      if((roll - roll_0) > -1 && (roll - roll_0) < 1)
+      MotoStop();
+      if((roll - roll_0) > -5 && (roll - roll_0) < 5)
         flag++;
-      if (flag > 50) {
+      if (flag > 200) {
         vehicle_state = running;
         flag = 0;
       
       }
-    }
-    else {
-      MotoControl(0, 0);
     }
 }
 /* USER CODE END 4 */
