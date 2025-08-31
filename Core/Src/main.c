@@ -66,6 +66,8 @@ float roll_0 = -4.8; //初始角度
 short gx, gy, gz; //陀螺仪原始数据
 short ax, ay, az; //加速度原始数据
 
+float turn_angle = 0;
+
 uint16_t uart_rx_buffer[9]={512, 512, 512, 512, 512, 512, 512, 512, 512};
 /* USER CODE END PV */
 
@@ -282,7 +284,12 @@ __used void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         // Call your PID control function here
         //PID_StandUpControl(0);
         PID_VelControl((512-uart_rx_buffer[3])/10);
-        PID_TurnControl((512.0-uart_rx_buffer[0])/512*180);
+        turn_angle += ((512.0-uart_rx_buffer[0])/512*3.6);
+        if(turn_angle > 180)
+          turn_angle -= 360;
+        else if(turn_angle < -180)
+          turn_angle += 360;
+        PID_TurnControl(turn_angle+(uart_rx_buffer[2]-512.0)/1024*180);
         MotoRun();
     }
     if (htim->Instance == TIM3 && vehicle_state == stop) // Check if the interrupt is from TIM2
