@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 PID_TypeDef pid = {366.3, 8, 1.4652, 0.0f, 0.0f, 3000.0f};//{550, 3, 2.2}
-PID_TypeDef pid_vel = {-0.3, -0.0015f, 0.3375, 0.0f, 0.0f, 15000.0f};//-0.22, -0.0, -0.08
+PID_TypeDef pid_vel = {-0.3, -0.0015f, 0.3375,  0.0f, 0.0f, 15000.0f};//-0.22, -0.0, -0.08
 PID_TypeDef pid_turn = {150, 0.0, 1.9, 0.0f, 0.0f, 3000.0f};
 
 static float filteredVel = 0; // 低通滤波值

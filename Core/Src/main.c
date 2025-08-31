@@ -61,12 +61,20 @@ int flag = 0;
 
 float pitch, roll, yaw;
 
-float roll_0 = -4.8; //初始角度
+float roll_0 = -3.5; //初始角度
 
 short gx, gy, gz; //陀螺仪原始数据
 short ax, ay, az; //加速度原始数据
 
 float turn_angle = 0;
+
+int pre_vel = 0;
+int vel_value = 0;
+float filtered_Vel = 0.9f;
+
+int pre_vel_2 = 0;
+int vel_value_2 = 0;
+float filtered_Vel_2 = 0.7f;
 
 uint16_t uart_rx_buffer[9]={512, 512, 512, 512, 512, 512, 512, 512, 512};
 /* USER CODE END PV */
@@ -283,7 +291,16 @@ __used void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     {
         // Call your PID control function here
         //PID_StandUpControl(0);
-        PID_VelControl((512-uart_rx_buffer[3])/10);
+
+        vel_value = (512-uart_rx_buffer[3])/5;
+        vel_value = vel_value*(1-filtered_Vel) + filtered_Vel*pre_vel;
+        pre_vel = vel_value;
+
+        vel_value_2 = vel_value;
+        vel_value_2 = vel_value_2*(1-filtered_Vel_2) + filtered_Vel_2*pre_vel_2;
+        pre_vel_2 = vel_value_2;
+
+        PID_VelControl(vel_value_2);
         turn_angle += ((512.0-uart_rx_buffer[0])/512*3.6);
         if(turn_angle > 180)
           turn_angle -= 360;
